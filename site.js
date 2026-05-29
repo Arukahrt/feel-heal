@@ -33,6 +33,19 @@
     els.forEach(function(e){io.observe(e);});
   }
 
+  /* ---------- nav shrink on scroll ---------- */
+  function initNavScroll(){
+    var nav=document.querySelector('.nav');
+    if(!nav) return;
+    var scrolled=false;
+    function check(){
+      var s=window.scrollY>40;
+      if(s!==scrolled){scrolled=s;nav.classList.toggle('scrolled',s);}
+    }
+    window.addEventListener('scroll',check,{passive:true});
+    check();
+  }
+
   /* ---------- mini emotional check-up ---------- */
   var QUESTIONS=[
     {q:"Akhir-akhir ini, perasaan apa yang paling sering muncul?",
@@ -263,6 +276,6 @@
   }
 
   document.addEventListener('DOMContentLoaded',function(){
-    initNav();initReveal();initCheckup();
+    initNav();initReveal();initNavScroll();initCheckup();
   });
 })();
