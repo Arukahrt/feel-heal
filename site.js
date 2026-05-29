@@ -11,6 +11,8 @@
     function toggle(open){
       burger.classList.toggle('open',open);
       drawer.classList.toggle('open',open);
+      burger.setAttribute('aria-expanded',open?'true':'false');
+      burger.setAttribute('aria-label',open?'Tutup menu':'Buka menu');
       document.body.style.overflow=open?'hidden':'';
     }
     burger.addEventListener('click',function(){toggle(!drawer.classList.contains('open'));});
@@ -131,15 +133,15 @@
       root.innerHTML=
         '<div class="ck-top"><span class="ck-step">Pertanyaan '+(state.i+1)+' / '+total+'</span>'+
         '<span class="ck-step">Emotional Check-Up</span></div>'+
-        '<div class="ck-bar"><i style="width:'+pct+'%"></i></div>'+
-        '<div class="q">'+Q.q+'</div>'+
-        '<div class="opts">'+Q.opts.map(function(o,idx){
-          return '<button class="opt'+(sel===idx?' sel':'')+'" data-idx="'+idx+'">'+
-            '<span class="emo">'+o.e+'</span><span>'+o.t+'</span></button>';
+        '<div class="ck-bar" role="progressbar" aria-valuenow="'+pct+'" aria-valuemin="0" aria-valuemax="100" aria-label="Progres check-up '+pct+'%"><i style="width:'+pct+'%"></i></div>'+
+        '<div class="q" id="ck-question">'+Q.q+'</div>'+
+        '<div class="opts" role="group" aria-labelledby="ck-question">'+Q.opts.map(function(o,idx){
+          return '<button class="opt'+(sel===idx?' sel':'')+'" data-idx="'+idx+'" type="button" aria-pressed="'+(sel===idx?'true':'false')+'">'+
+            '<span class="emo" aria-hidden="true">'+o.e+'</span><span>'+o.t+'</span></button>';
         }).join('')+'</div>'+
         '<div class="ck-nav">'+
-          (state.i>0?'<button class="btn btn-cream ck-back" data-act="back">←</button>':'')+
-          '<button class="btn btn-primary" data-act="next"'+(sel==null?' disabled style="opacity:.45;cursor:not-allowed"':'')+'>'+
+          (state.i>0?'<button class="btn btn-cream ck-back" data-act="back" type="button">←</button>':'')+
+          '<button class="btn btn-primary" data-act="next" type="button"'+(sel==null?' disabled style="opacity:.45;cursor:not-allowed"':'')+'>'+
           (state.i===total-1?'Lihat Hasil':'Lanjut')+'</button>'+
         '</div>';
       root.querySelectorAll('.opt').forEach(function(b){

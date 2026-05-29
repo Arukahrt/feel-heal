@@ -2,14 +2,29 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Kontak — Feel & Heal</title>
+<meta name="description" content="Hubungi Feel & Heal via WhatsApp atau Instagram. Cerita dulu, admin siap membantu mulai dari emotional check-up.">
+<meta name="theme-color" content="#9caf88">
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Kontak — Feel & Heal">
+<meta property="og:description" content="Hubungi Feel & Heal via WhatsApp atau Instagram. Admin siap membantu kamu memulai perjalanan healing.">
+<meta property="og:url" content="https://feel-heal.vercel.app/kontak.html">
+<meta property="og:image" content="https://feel-heal.vercel.app/og-image.png">
+<meta property="og:locale" content="id_ID">
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Kontak — Feel & Heal">
+<meta name="twitter:description" content="Hubungi Feel & Heal via WhatsApp atau Instagram.">
+<meta name="twitter:image" content="https://feel-heal.vercel.app/og-image.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Spline+Sans+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="site.css">
 </head>
 <body>
+<a class="skip-link" href="#main">Langsung ke konten</a>
 
 <!-- NAV -->
 <header class="nav">
@@ -23,11 +38,11 @@
     </nav>
     <div class="nav-right">
       <a class="btn btn-primary" href="#admin">Hubungi Admin</a>
-      <button class="burger" aria-label="Buka menu"><i></i><i></i><i></i></button>
+      <button class="burger" aria-label="Buka menu" aria-expanded="false" aria-controls="drawer"><i aria-hidden="true"></i><i aria-hidden="true"></i><i aria-hidden="true"></i></button>
     </div>
   </div>
 </header>
-<div class="drawer">
+<div class="drawer" id="drawer" role="navigation" aria-label="Menu navigasi mobile">
   <a href="index.html">Beranda</a>
   <a href="layanan.html">Layanan</a>
   <a href="tentang.html">Tentang</a>
@@ -37,7 +52,7 @@
 </div>
 
 <!-- HEADER -->
-<section class="section bg-sage on-sage tight" style="overflow:hidden;position:relative">
+<section class="section bg-sage on-sage tight" id="main" style="overflow:hidden;position:relative">
   <span class="blob b1" style="position:absolute;width:280px;height:280px;border-radius:50%;background:var(--cream-2);opacity:.45;top:-130px;right:-80px"></span>
   <div class="wrap" style="position:relative;z-index:2">
     <span class="eyebrow"><span class="d"></span>Hubungi kami</span>
