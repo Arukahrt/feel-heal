@@ -24,13 +24,17 @@
   /* ---------- scroll reveal ---------- */
   function initReveal(){
     var els=document.querySelectorAll('[data-reveal]');
+    if(!els.length) return;
     if(!('IntersectionObserver' in window)){els.forEach(function(e){e.classList.add('in');});return;}
     var io=new IntersectionObserver(function(entries){
       entries.forEach(function(en){
         if(en.isIntersecting){en.target.classList.add('in');io.unobserve(en.target);}
       });
-    },{threshold:0.12,rootMargin:'0px 0px -8% 0px'});
-    els.forEach(function(e){io.observe(e);});
+    },{threshold:0.08,rootMargin:'0px 0px -6% 0px'});
+    /* Use requestAnimationFrame to ensure layout is complete before observing */
+    requestAnimationFrame(function(){
+      els.forEach(function(e){io.observe(e);});
+    });
   }
 
   /* ---------- nav shrink on scroll ---------- */
