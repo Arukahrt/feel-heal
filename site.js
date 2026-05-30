@@ -23,29 +23,28 @@
 
   /* ---------- scroll reveal ---------- */
   function initReveal(){
-    var els=document.querySelectorAll('[data-reveal]');
+    var els=Array.prototype.slice.call(document.querySelectorAll('[data-reveal]'));
     if(!els.length) return;
-    if(!('IntersectionObserver' in window)){els.forEach(function(e){e.classList.add('in');});return;}
-    var firstBatch=true;
-    var io=new IntersectionObserver(function(entries){
-      if(firstBatch){
-        /* First callback fires for elements already in viewport at load.
-           Add a small delay so the browser renders opacity:0 first,
-           then transitions to opacity:1 — making the animation visible. */
-        firstBatch=false;
-        var visible=entries.filter(function(en){return en.isIntersecting;});
-        var hidden=entries.filter(function(en){return !en.isIntersecting;});
-        hidden.forEach(function(en){/* leave for scroll */});
-        setTimeout(function(){
-          visible.forEach(function(en){en.target.classList.add('in');io.unobserve(en.target);});
-        },80);
-      }else{
-        entries.forEach(function(en){
-          if(en.isIntersecting){en.target.classList.add('in');io.unobserve(en.target);}
-        });
-      }
-    },{threshold:0.01});
-    els.forEach(function(e){io.observe(e);});
+
+    function reveal(){
+      var wh=window.innerHeight;
+      els.forEach(function(el){
+        if(el.classList.contains('in')) return;
+        var top=el.getBoundingClientRect().top;
+        if(top < wh - 60){
+          el.classList.add('in');
+        }
+      });
+      /* cleanup fully revealed elements */
+      els=els.filter(function(el){return !el.classList.contains('in');});
+    }
+
+    window.addEventListener('scroll',reveal,{passive:true});
+    window.addEventListener('resize',reveal,{passive:true});
+    /* trigger on load after a frame so initial opacity:0 paints first */
+    requestAnimationFrame(function(){
+      requestAnimationFrame(reveal);
+    });
   }
 
   /* ---------- nav shrink on scroll ---------- */
