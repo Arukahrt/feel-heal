@@ -476,6 +476,11 @@ img{max-width:100%;display:block;}
   .nav-right .btn{display:inline-flex;}
   .hero .inner{display:grid;grid-template-columns:1.05fr .95fr;align-items:center;gap:40px;}
   .hero .collage{margin-top:0;height:430px;}
+  .hero .collage .c-main{inset:0 44px 54px 0;}
+  .hero .collage .c-mood{width:190px;padding:18px;left:10px;}
+  .hero .collage .c-chk{width:180px;padding:15px 17px;}
+  .hero .b1{width:420px;height:420px;top:-160px;right:-120px;}
+  .hero .b2{width:320px;height:320px;bottom:-120px;left:-100px;}
   .hero h1{font-size:clamp(48px,5vw,64px);}
   .lead-2{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;}
   .sec-head.center{text-align:center;}
