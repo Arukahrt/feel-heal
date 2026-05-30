@@ -26,23 +26,26 @@
     var els=document.querySelectorAll('[data-reveal]');
     if(!els.length) return;
     if(!('IntersectionObserver' in window)){els.forEach(function(e){e.classList.add('in');});return;}
+    var firstBatch=true;
     var io=new IntersectionObserver(function(entries){
-      entries.forEach(function(en){
-        if(en.isIntersecting){en.target.classList.add('in');io.unobserve(en.target);}
-      });
+      if(firstBatch){
+        /* First callback fires for elements already in viewport at load.
+           Add a small delay so the browser renders opacity:0 first,
+           then transitions to opacity:1 — making the animation visible. */
+        firstBatch=false;
+        var visible=entries.filter(function(en){return en.isIntersecting;});
+        var hidden=entries.filter(function(en){return !en.isIntersecting;});
+        hidden.forEach(function(en){/* leave for scroll */});
+        setTimeout(function(){
+          visible.forEach(function(en){en.target.classList.add('in');io.unobserve(en.target);});
+        },80);
+      }else{
+        entries.forEach(function(en){
+          if(en.isIntersecting){en.target.classList.add('in');io.unobserve(en.target);}
+        });
+      }
     },{threshold:0.01});
     els.forEach(function(e){io.observe(e);});
-    /* Fallback: after a short delay, force-check elements already in viewport */
-    setTimeout(function(){
-      els.forEach(function(e){
-        if(!e.classList.contains('in')){
-          var rect=e.getBoundingClientRect();
-          if(rect.top<window.innerHeight&&rect.bottom>0){
-            e.classList.add('in');io.unobserve(e);
-          }
-        }
-      });
-    },100);
   }
 
   /* ---------- nav shrink on scroll ---------- */
