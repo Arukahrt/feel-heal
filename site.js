@@ -30,11 +30,19 @@
       entries.forEach(function(en){
         if(en.isIntersecting){en.target.classList.add('in');io.unobserve(en.target);}
       });
-    },{threshold:0.08,rootMargin:'0px 0px -6% 0px'});
-    /* Use requestAnimationFrame to ensure layout is complete before observing */
-    requestAnimationFrame(function(){
-      els.forEach(function(e){io.observe(e);});
-    });
+    },{threshold:0.01});
+    els.forEach(function(e){io.observe(e);});
+    /* Fallback: after a short delay, force-check elements already in viewport */
+    setTimeout(function(){
+      els.forEach(function(e){
+        if(!e.classList.contains('in')){
+          var rect=e.getBoundingClientRect();
+          if(rect.top<window.innerHeight&&rect.bottom>0){
+            e.classList.add('in');io.unobserve(e);
+          }
+        }
+      });
+    },100);
   }
 
   /* ---------- nav shrink on scroll ---------- */

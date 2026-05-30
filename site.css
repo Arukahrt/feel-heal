@@ -429,17 +429,19 @@ img{max-width:100%;display:block;}
 .nav.scrolled .bar{height:56px;}
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto;}
+  /* Reveal elements visible immediately without motion */
   [data-reveal],[data-reveal="left"],[data-reveal="right"],[data-reveal="scale"],[data-reveal="zoom"]{
-    opacity:1;transform:none;transition:none;}
-  .hero .blob{animation:none;}
+    opacity:1 !important;transform:none !important;transition:none !important;}
+  /* Hero entrance: show immediately, no animation */
   .hero .hero-copy .pill,
   .hero .hero-copy h1,
   .hero .hero-copy .sub,
   .hero .hero-copy .acts,
-  .hero .hero-copy .marq,
-  .hero .collage .c-main,
-  .hero .collage .c-mood,
-  .hero .collage .c-chk{animation:none;opacity:1;}
+  .hero .hero-copy .marq{animation:none !important;opacity:1 !important;transform:none !important;}
+  .hero .collage .c-main{animation:none !important;opacity:1 !important;}
+  .hero .collage .c-mood{animation:none !important;opacity:1 !important;}
+  .hero .collage .c-chk{animation:none !important;opacity:1 !important;}
+  .hero .blob{animation:none !important;}
   .ai-orb{animation:none;}
   .spark{animation:none;}
   .shimmer{animation:none;}
