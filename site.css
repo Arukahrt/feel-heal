@@ -427,28 +427,12 @@ img{max-width:100%;display:block;}
 /* nav shrink on scroll */
 .nav.scrolled{box-shadow:0 4px 20px -8px rgba(44,56,41,.15);}
 .nav.scrolled .bar{height:56px;}
+/* Reduced motion: only disable non-essential looping animations */
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto;}
-  /* Reveal elements visible immediately without motion */
-  [data-reveal],[data-reveal="left"],[data-reveal="right"],[data-reveal="scale"],[data-reveal="zoom"]{
-    opacity:1 !important;transform:none !important;transition:none !important;}
-  /* Hero entrance: show immediately, no animation */
-  .hero .hero-copy .pill,
-  .hero .hero-copy h1,
-  .hero .hero-copy .sub,
-  .hero .hero-copy .acts,
-  .hero .hero-copy .marq{animation:none !important;opacity:1 !important;transform:none !important;}
-  .hero .collage .c-main{animation:none !important;opacity:1 !important;}
-  .hero .collage .c-mood{animation:none !important;opacity:1 !important;}
-  .hero .collage .c-chk{animation:none !important;opacity:1 !important;}
-  .hero .blob{animation:none !important;}
   .ai-orb{animation:none;}
-  .spark{animation:none;}
   .shimmer{animation:none;}
   .dots i{animation:none;opacity:1;}
-  .btn{transition:none;}
-  .svc{transition:none;}
-  .nav .bar{transition:none;}
 }
 
 /* ====================================================================
