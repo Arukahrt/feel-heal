@@ -149,7 +149,7 @@
     var state={i:0,answers:[]};
     /* ---- Saklar AI: set true untuk mengaktifkan refleksi yang digenerate live oleh AI.
        Saat false (default sekarang), hasil memakai refleksi non-AI berbasis jawaban. ---- */
-    var USE_AI=false;
+    var USE_AI=true;
 
     function render(){
       var total=QUESTIONS.length;
@@ -208,10 +208,10 @@
     function renderLoading(){
       root.innerHTML=
         '<div class="ck-loading">'+
-          '<div class="ai-badge">'+(USE_AI?'<span class="spark">✦</span> Feel &amp; Heal AI':'<span class="spark">✦</span> Menyusun refleksimu')+'</div>'+
+          '<div class="ai-badge"><span class="spark">✦</span> Menyusun refleksimu</div>'+
           '<div class="ai-orb"></div>'+
           '<h3>Membaca jawabanmu<span class="dots"><i>.</i><i>.</i><i>.</i></span></h3>'+
-          '<p>'+(USE_AI?'AI kami sedang menyusun refleksi personal untukmu. Tarik napas sebentar ya.':'Sedang menyiapkan refleksi awal dari jawabanmu. Tarik napas sebentar ya.')+'</p>'+
+          '<p>Sedang menyiapkan refleksi awal dari jawabanmu. Tarik napas sebentar ya.</p>'+
           '<div class="shimmer"></div><div class="shimmer w85"></div><div class="shimmer w60"></div>'+
         '</div>';
     }
@@ -223,16 +223,14 @@
       }).join('');
       root.innerHTML=
         '<div class="ck-result">'+
-        (ai
-          ? '<div class="badge ai"><span class="spark">✦</span> Powered by AI</div>'
-          : '<div class="badge"><span>✓</span> Check-up selesai</div>')+
+        '<div class="badge"><span>✓</span> Check-up selesai</div>'+
         '<h3>'+esc(data.title)+'</h3>'+
         '<p>'+esc(data.summary)+'</p>'+
         (insights?'<ul class="ck-insights">'+insights+'</ul>':'')+
         (steps?'<div class="recos">'+steps+'</div>':'')+
         (data.affirmation?'<p class="ck-affirm">“'+esc(data.affirmation)+'”</p>':'')+
         '<p style="font-size:13px;color:var(--muted)">'+
-          (ai?'Refleksi ini dihasilkan AI berdasarkan jawabanmu — bukan diagnosis medis. ':'Refleksi awal, bukan diagnosis. ')+
+          'Refleksi awal, bukan diagnosis. '+
           'Lanjutkan bersama pendamping kami.</p>'+
         '<div class="acts" style="margin-top:18px">'+
           '<a class="btn btn-primary" href="kontak.html">Hubungi Admin</a>'+
