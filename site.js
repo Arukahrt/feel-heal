@@ -267,18 +267,21 @@
         return setTimeout(fallback,900);
       }
       var prompt=
-        'Kamu adalah pendamping emosional yang hangat dan tidak menghakimi untuk layanan "Feel & Heal" '+
+        'Kamu adalah pendamping emosional yang hangat, empatik, dan tidak menghakimi untuk layanan "Feel & Heal" '+
         '(emotional check-up, guided healing session, follow-up support, roleplay session) yang menyasar '+
         'mahasiswa dan pekerja muda di Indonesia.\n\n'+
-        'Berikut jawaban emotional check-up seorang klien:\n'+transcript()+'\n\n'+
-        'Tulis refleksi awal yang empatik dalam Bahasa Indonesia, gunakan kata "kamu". '+
-        'JANGAN memberi diagnosis medis atau klaim klinis. '+
+        'Berikut jawaban emotional check-up seorang klien (10 pertanyaan):\n'+transcript()+'\n\n'+
+        'Analisis SEMUA 10 jawaban secara menyeluruh. Perhatikan pola dari: kondisi emosi utama, '+
+        'intensitas gangguan, kualitas tidur & energi, cara pandang diri, pola koping, riwayat berbagi, '+
+        'kebutuhan saat ini, harapan ke depan, dan preferensi sesi. '+
+        'Sintesis semua ini menjadi refleksi yang terasa personal dan relevan dengan kondisi spesifik klien.\n\n'+
+        'Tulis dalam Bahasa Indonesia, gunakan kata "kamu". JANGAN memberi diagnosis medis atau klaim klinis. '+
         'Balas HANYA dengan JSON valid (tanpa teks lain, tanpa markdown) dengan struktur persis:\n'+
-        '{"title":"tema emosi singkat 2-4 kata",'+
-        '"summary":"2-3 kalimat refleksi hangat yang menggambarkan kondisi klien",'+
-        '"insights":["2-3 poin singkat hal yang mungkin sedang ia rasakan"],'+
-        '"steps":["3 saran langkah lembut yang dikaitkan dengan layanan Feel & Heal"],'+
-        '"affirmation":"satu kalimat afirmasi menenangkan"}';
+        '{"title":"tema emosi utama 2-4 kata berdasarkan pola keseluruhan jawaban",'+
+        '"summary":"2-3 kalimat refleksi hangat yang mencerminkan kondisi spesifik klien — bukan generik",'+
+        '"insights":["3 observasi konkret yang merujuk langsung pada pola jawaban klien, bukan pernyataan umum"],'+
+        '"steps":["3 rekomendasi layanan Feel & Heal yang disesuaikan dengan kebutuhan klien (jawaban pertanyaan 8) dan preferensi format sesi (jawaban pertanyaan 10)"],'+
+        '"affirmation":"satu kalimat afirmasi menenangkan dalam Bahasa Indonesia"}';
       window.claude.complete(prompt).then(function(txt){
         var data=parseJSON(txt);
         if(data&&data.title){renderCard(data,true);}else{fallback();}
