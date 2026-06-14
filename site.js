@@ -75,24 +75,6 @@
        {t:"Beberapa kali seminggu",e:"◐",tag:"mid"},
        {t:"Sesekali saja",e:"○",tag:"low"}
      ]},
-    {q:"Apa yang paling kamu butuhkan sekarang?",
-     opts:[
-       {t:"Didengar tanpa dihakimi",e:"🫂",tag:"listen"},
-       {t:"Memahami akar masalahku",e:"🔍",tag:"insight"},
-       {t:"Langkah konkret untuk pulih",e:"🌱",tag:"action"}
-     ]},
-    {q:"Kamu lebih nyaman dengan sesi yang...",
-     opts:[
-       {t:"Online via chat / call",e:"💬",tag:"online"},
-       {t:"Video call (Google Meet)",e:"🎥",tag:"video"},
-       {t:"Hybrid / tatap muka terbatas",e:"🤝",tag:"hybrid"}
-     ]},
-    {q:"Sudah pernah cerita ke seseorang soal ini?",
-     opts:[
-       {t:"Belum, ini pertama kali",e:"🌷",tag:"first"},
-       {t:"Pernah, tapi belum lega",e:"🍃",tag:"some"},
-       {t:"Sering, ingin lebih terarah",e:"🧭",tag:"often"}
-     ]},
     {q:"Bagaimana kualitas tidur & istirahatmu belakangan?",
      opts:[
        {t:"Cukup & nyenyak",e:"🌙",tag:"sleep_ok"},
@@ -117,11 +99,29 @@
        {t:"Memendam sendiri",e:"🤐",tag:"keep"},
        {t:"Mengalihkan ke hal lain",e:"🎧",tag:"distract"}
      ]},
+    {q:"Sudah pernah cerita ke seseorang soal ini?",
+     opts:[
+       {t:"Belum, ini pertama kali",e:"🌷",tag:"first"},
+       {t:"Pernah, tapi belum lega",e:"🍃",tag:"some"},
+       {t:"Sering, ingin lebih terarah",e:"🧭",tag:"often"}
+     ]},
+    {q:"Apa yang paling kamu butuhkan sekarang?",
+     opts:[
+       {t:"Didengar tanpa dihakimi",e:"🫂",tag:"listen"},
+       {t:"Memahami akar masalahku",e:"🔍",tag:"insight"},
+       {t:"Langkah konkret untuk pulih",e:"🌱",tag:"action"}
+     ]},
     {q:"Apa yang paling kamu harapkan setelah sesi ini?",
      opts:[
        {t:"Merasa lebih tenang",e:"🍵",tag:"hope_calm"},
        {t:"Punya arah yang jelas",e:"🧭",tag:"hope_clarity"},
        {t:"Lebih kuat menghadapi hari",e:"🌿",tag:"hope_strength"}
+     ]},
+    {q:"Kamu lebih nyaman dengan sesi yang...",
+     opts:[
+       {t:"Online via chat / call",e:"💬",tag:"online"},
+       {t:"Video call (Google Meet)",e:"🎥",tag:"video"},
+       {t:"Hybrid / tatap muka terbatas",e:"🤝",tag:"hybrid"}
      ]}
   ];
 
