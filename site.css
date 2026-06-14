@@ -438,14 +438,10 @@ img{max-width:100%;display:block;}
 /* ====================================================================
    SERVICE ILLUSTRATION BANNER
    ==================================================================== */
-.svc-illo{height:106px;border-radius:var(--r-md);margin-bottom:10px;
-  display:flex;align-items:center;justify-content:center;
-  background:var(--cream-2);position:relative;overflow:hidden;}
-.svc-illo .bb1{position:absolute;width:130px;height:130px;border-radius:50%;
-  background:var(--sage);opacity:.12;right:-30px;bottom:-40px;}
-.svc-illo .bb2{position:absolute;width:70px;height:70px;border-radius:50%;
-  background:var(--sage-soft);opacity:.13;left:-16px;top:-18px;}
-.svc-illo svg{position:relative;z-index:1;}
+.svc-illo{height:160px;border-radius:var(--r-md);margin-bottom:10px;
+  background:var(--cream-2);overflow:hidden;
+  display:flex;align-items:center;justify-content:center;padding:12px;}
+.svc-illo img{max-height:100%;width:auto;object-fit:contain;}
 
 /* ====================================================================
    PRICE CARD ICON
@@ -464,17 +460,23 @@ img{max-width:100%;display:block;}
 .ckintro > p::before{content:"";width:6px;height:6px;border-radius:50%;
   background:var(--sage-deep);flex:none;}
 .ckintro-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
-.cktopic{background:var(--cream);border-radius:var(--r-sm);padding:13px 14px;
-  display:flex;align-items:flex-start;gap:11px;box-shadow:var(--shadow-sm);}
-.cktopic .ti{width:38px;height:38px;border-radius:11px;background:var(--sage);flex:none;
-  display:grid;place-items:center;font-size:18px;line-height:1;}
-.cktopic h4{font-size:13.5px;font-weight:700;margin-bottom:2px;line-height:1.2;}
-.cktopic p{font-size:12px;color:var(--muted);line-height:1.35;}
+.cktopic{background:var(--cream);border-radius:var(--r-md);overflow:hidden;
+  box-shadow:var(--shadow-sm);display:flex;flex-direction:column;}
+.cktopic .cktopic-img{width:100%;height:110px;object-fit:contain;
+  background:var(--cream-2);padding:10px;}
+.cktopic .cktopic-body{padding:12px 13px 14px;display:flex;align-items:flex-start;gap:9px;}
+.cktopic .ti{width:30px;height:30px;border-radius:9px;background:var(--sage);flex:none;
+  display:grid;place-items:center;font-size:14px;line-height:1;}
+.cktopic h4{font-size:13px;font-weight:700;margin-bottom:2px;line-height:1.2;}
+.cktopic p{font-size:11.5px;color:var(--muted);line-height:1.35;}
 .ckflow{display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;}
 .ckflow .fs{background:var(--cream);border-radius:999px;padding:7px 14px;
   font-size:12.5px;font-weight:700;color:var(--sage-deeper);box-shadow:var(--shadow-sm);
   white-space:nowrap;}
 .ckflow .fa{color:var(--sage-deep);font-weight:800;font-size:15px;}
+.storyset-credit{font-size:11.5px;color:var(--muted);text-align:center;
+  margin-top:8px;opacity:.7;}
+.storyset-credit a{color:var(--sage-deep);text-decoration:underline;}
 
 /* ====================================================================
    RESPONSIVE — tablet & up
