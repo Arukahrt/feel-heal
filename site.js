@@ -313,6 +313,7 @@
     function renderPackageCard(pkg){
       var reasons=pkg.reasons.map(function(t){return '<li>'+esc(t)+'</li>';}).join('');
       var items=pkg.items.map(function(t){return '<li>'+esc(t)+'</li>';}).join('');
+      var href=pkg.href||'kontak.html';
       return '<aside class="ck-package card price feat">'+
         '<span class="badge">'+esc(pkg.label)+'</span>'+
         '<div class="price-icon" aria-hidden="true">'+esc(pkg.icon)+'</div>'+
@@ -322,8 +323,24 @@
         '<p>'+esc(pkg.desc)+'</p>'+
         '<ul class="ck-package-reasons">'+reasons+'</ul>'+
         '<ul>'+items+'</ul>'+
-        '<a class="btn btn-cream" href="kontak.html">Hubungi Admin</a>'+
+        '<a class="btn btn-cream" href="'+esc(href)+'">Hubungi Admin</a>'+
       '</aside>';
+    }
+    function contactLink(data,pkg,findings){
+      var pairs=[
+        ['source','checkup'],
+        ['result',data.title],
+        ['package',pkg.title],
+        ['tier',pkg.tier],
+        ['need',answerText(7)],
+        ['format',answerText(9)],
+        ['summary',data.summary],
+        ['finding',(findings&&findings[0]&&findings[0].text)||'']
+      ];
+      var q=pairs.map(function(pair){
+        return encodeURIComponent(pair[0])+'='+encodeURIComponent(pair[1]||'');
+      }).join('&');
+      return 'kontak.html?'+q+'#hubungi-admin';
     }
 
     function renderLoading(){
@@ -340,8 +357,10 @@
 
     function renderCard(data,ai){
       var insights=(data.insights||[]).map(function(t){return '<li>'+esc(t)+'</li>';}).join('');
-      var findings=renderFindings(checkupFindings(data.findings));
+      var findingItems=checkupFindings(data.findings);
+      var findings=renderFindings(findingItems);
       var pkg=packageRecommendation();
+      pkg.href=contactLink(data,pkg,findingItems);
       root.classList.add('has-package-result');
       root.innerHTML=
         '<div class="ck-result-layout">'+
@@ -420,7 +439,30 @@
     render();
   }
 
+  function initContactDeepLink(){
+    var target=document.querySelector('[data-checkup-context]');
+    if(!target||!window.URLSearchParams) return;
+    var params=new URLSearchParams(window.location.search);
+    if(params.get('source')!=='checkup') return;
+    function clean(key){return params.get(key)||'-';}
+    target.hidden=false;
+    target.innerHTML=
+      '<div class="ck-findings" style="margin:18px 0">'+
+        '<h4>Konteks dari hasil check-up</h4>'+
+        '<div class="ck-finding"><span class="ck-finding-label">Hasil layanan</span><span>'+escapeHtml(clean('result'))+'</span></div>'+
+        '<div class="ck-finding"><span class="ck-finding-label">Rekomendasi paket</span><span>'+escapeHtml(clean('tier'))+' · '+escapeHtml(clean('package'))+'</span></div>'+
+        '<div class="ck-finding"><span class="ck-finding-label">Kebutuhan</span><span>'+escapeHtml(clean('need'))+' · '+escapeHtml(clean('format'))+'</span></div>'+
+        '<div class="ck-finding"><span class="ck-finding-label">Ringkasan</span><span>'+escapeHtml(clean('summary'))+'</span></div>'+
+      '</div>';
+  }
+
+  function escapeHtml(s){
+    return String(s==null?'':s).replace(/[&<>]/g,function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];
+    });
+  }
+
   document.addEventListener('DOMContentLoaded',function(){
-    initNav();initReveal();initNavScroll();initCheckup();
+    initNav();initReveal();initNavScroll();initCheckup();initContactDeepLink();
   });
 })();
