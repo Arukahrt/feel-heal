@@ -127,20 +127,15 @@
 
   var RESULTS={
     anxious:{title:"Overthinking & Kecemasan",
-      desc:"Pikiranmu terdengar penuh dan jarang berhenti. Kamu butuh ruang untuk menata ulang dan bernapas.",
-      recos:["Emotional Check-Up untuk memetakan pemicunya","Guided Healing untuk teknik menenangkan pikiran","Follow-Up agar progresmu tetap terjaga"]},
+      desc:"Pikiranmu terdengar penuh dan jarang berhenti. Kamu butuh ruang untuk menata ulang dan bernapas."},
     burnout:{title:"Burnout & Kelelahan Emosional",
-      desc:"Energimu terkuras. Ini sinyal untuk berhenti sebentar, dipahami, dan dipulihkan pelan-pelan.",
-      recos:["Emotional Check-Up untuk mengenali batasmu","Guided Healing untuk coping strategy & istirahat sehat","Follow-Up untuk menjaga keseimbangan"]},
+      desc:"Energimu terkuras. Ini sinyal untuk berhenti sebentar, dipahami, dan dipulihkan pelan-pelan."},
     lost:{title:"Galau & Kehilangan Arah",
-      desc:"Wajar merasa bingung arah. Kita bisa bantu kamu menemukan kembali pijakan dan kebutuhan emosionalmu.",
-      recos:["Emotional Check-Up untuk memahami kondisimu","Guided Reflection untuk menata prioritas","Follow-Up untuk menemani langkahmu"]},
+      desc:"Wajar merasa bingung arah. Kita bisa bantu kamu menemukan kembali pijakan dan kebutuhan emosionalmu."},
     relationship:{title:"Tekanan dalam Hubungan",
-      desc:"Hubungan bisa terasa berat. Kamu berhak punya ruang aman untuk memprosesnya tanpa dihakimi.",
-      recos:["Emotional Check-Up untuk mengenali perasaanmu","Roleplay Session untuk komunikasi asertif","Follow-Up untuk pendampingan lanjutan"]},
+      desc:"Hubungan bisa terasa berat. Kamu berhak punya ruang aman untuk memprosesnya tanpa dihakimi."},
     default:{title:"Ruang untuk Memahami Diri",
-      desc:"Terima kasih sudah jujur pada dirimu. Feel & Heal siap menemani langkah pertamamu.",
-      recos:["Mulai dari Emotional Check-Up bersama admin","Lanjut ke Guided Healing Session","Dapatkan Follow-Up Support"]}
+      desc:"Terima kasih sudah jujur pada dirimu. Feel & Heal siap menemani langkah pertamamu."}
   };
 
   var PACKAGES={
@@ -232,6 +227,45 @@
         return o?o.tag:null;
       }).filter(Boolean);
     }
+    function answerText(i){
+      var q=QUESTIONS[i], o=q&&q.opts[state.answers[i]];
+      return o?o.t:'-';
+    }
+    function checkupFindings(custom){
+      var labels=["Pola utama","Dampak harian","Kebutuhan saat ini"];
+      if(custom&&custom.length){
+        return custom.slice(0,3).map(function(item,i){
+          var text=typeof item==='string'?item:(item&&item.text)||'';
+          return {label:(item&&item.label)||labels[i]||"Hasil",text:text};
+        }).filter(function(item){return item.text;});
+      }
+      var tags=answerTags();
+      var impact="Intensitasnya masih bisa dipantau sambil kamu belajar mengenali pemicunya.";
+      if(tags.indexOf('high')>=0){
+        impact="Muncul hampir setiap hari, jadi wajar kalau pikiran dan energimu terasa cepat penuh.";
+      }else if(tags.indexOf('mid')>=0){
+        impact="Datang beberapa kali dalam seminggu, cukup sering untuk mulai diberi ruang dan perhatian.";
+      }
+      if(tags.indexOf('insomnia')>=0||tags.indexOf('sleep_bad')>=0){
+        impact+=" Pola istirahatmu juga ikut terganggu.";
+      }
+      if(tags.indexOf('energy_empty')>=0||tags.indexOf('energy_low')>=0){
+        impact+=" Energi harianmu sedang banyak terkuras.";
+      }
+      return [
+        {label:"Pola utama",text:"Yang paling terasa sekarang adalah "+answerText(0).toLowerCase()+"."},
+        {label:"Dampak harian",text:impact},
+        {label:"Kebutuhan saat ini",text:"Kamu sedang butuh "+answerText(7).toLowerCase()+" dan lebih nyaman dengan "+answerText(9).toLowerCase()+"."}
+      ];
+    }
+    function renderFindings(items){
+      if(!items||!items.length) return '';
+      return '<div class="ck-findings"><h4>Hasil check-up</h4>'+
+        items.map(function(item){
+          return '<div class="ck-finding"><span class="ck-finding-label">'+esc(item.label)+'</span>'+
+            '<span>'+esc(item.text)+'</span></div>';
+        }).join('')+'</div>';
+    }
     function packageRecommendation(){
       var tags=answerTags();
       var main=tags[0]||'default';
@@ -268,7 +302,7 @@
     function renderPackageCard(pkg){
       var reasons=pkg.reasons.map(function(t){return '<li>'+esc(t)+'</li>';}).join('');
       var items=pkg.items.map(function(t){return '<li>'+esc(t)+'</li>';}).join('');
-      return '<aside class="ck-package card price'+(pkg.tier==='Premium'?'':' feat')+'">'+
+      return '<aside class="ck-package card price feat">'+
         '<span class="badge">'+esc(pkg.label)+'</span>'+
         '<div class="price-icon" aria-hidden="true">'+esc(pkg.icon)+'</div>'+
         '<span class="tier">'+esc(pkg.tier)+'</span>'+
@@ -277,7 +311,7 @@
         '<p>'+esc(pkg.desc)+'</p>'+
         '<ul class="ck-package-reasons">'+reasons+'</ul>'+
         '<ul>'+items+'</ul>'+
-        '<a class="btn '+(pkg.tier==='Premium'?'btn-sage':'btn-cream')+'" href="kontak.html">Hubungi Admin</a>'+
+        '<a class="btn btn-cream" href="kontak.html">Hubungi Admin</a>'+
       '</aside>';
     }
 
@@ -295,9 +329,7 @@
 
     function renderCard(data,ai){
       var insights=(data.insights||[]).map(function(t){return '<li>'+esc(t)+'</li>';}).join('');
-      var steps=(data.steps||[]).map(function(s,i){
-        return '<div class="reco"><span class="ic">'+(i+1)+'</span><span>'+esc(s)+'</span></div>';
-      }).join('');
+      var findings=renderFindings(checkupFindings(data.findings));
       var pkg=packageRecommendation();
       root.classList.add('has-package-result');
       root.innerHTML=
@@ -307,7 +339,7 @@
         '<h3>'+esc(data.title)+'</h3>'+
         '<p>'+esc(data.summary)+'</p>'+
         (insights?'<ul class="ck-insights">'+insights+'</ul>':'')+
-        (steps?'<div class="recos">'+steps+'</div>':'')+
+        findings+
         (data.affirmation?'<p class="ck-affirm">“'+esc(data.affirmation)+'”</p>':'')+
         '<p style="font-size:13px;color:var(--muted)">'+
           'Refleksi awal, bukan diagnosis. '+
@@ -338,7 +370,7 @@
       var R=RESULTS[tags[0]]||RESULTS.default;
       var ins=[];
       tags.forEach(function(t){if(INSIGHT[t]&&ins.indexOf(INSIGHT[t])<0&&ins.length<3)ins.push(INSIGHT[t]);});
-      renderCard({title:R.title,summary:R.desc,insights:ins,steps:R.recos,
+      renderCard({title:R.title,summary:R.desc,insights:ins,findings:checkupFindings(),
         affirmation:"It's okay to not be okay — take your time to feel and heal."},false);
     }
 
@@ -361,7 +393,7 @@
         '{"title":"tema emosi utama 2-4 kata berdasarkan pola keseluruhan jawaban",'+
         '"summary":"2-3 kalimat refleksi hangat yang mencerminkan kondisi spesifik klien — bukan generik",'+
         '"insights":["3 observasi konkret yang merujuk langsung pada pola jawaban klien, bukan pernyataan umum"],'+
-        '"steps":["3 rekomendasi layanan Feel & Heal yang disesuaikan dengan kebutuhan klien (jawaban pertanyaan 8) dan preferensi format sesi (jawaban pertanyaan 10)"],'+
+        '"findings":["3 hasil check-up konkret: pola emosi utama, dampak harian, dan kebutuhan/format sesi yang terlihat dari jawaban klien"],'+
         '"affirmation":"satu kalimat afirmasi menenangkan dalam Bahasa Indonesia"}';
       window.claude.complete(prompt).then(function(txt){
         var data=parseJSON(txt);
