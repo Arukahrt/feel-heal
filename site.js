@@ -3,6 +3,8 @@
    nav drawer · scroll reveal · mini emotional check-up
    ==================================================================== */
 (function(){
+  var WHATSAPP_NUMBER='6283115601410';
+
   /* ---------- mobile drawer ---------- */
   function initNav(){
     var burger=document.querySelector('.burger');
@@ -441,10 +443,17 @@
 
   function initContactDeepLink(){
     var target=document.querySelector('[data-checkup-context]');
-    if(!target||!window.URLSearchParams) return;
+    if(!window.URLSearchParams) return;
     var params=new URLSearchParams(window.location.search);
-    if(params.get('source')!=='checkup') return;
+    var fromCheckup=params.get('source')==='checkup';
     function clean(key){return params.get(key)||'-';}
+    var message=fromCheckup?checkupContactMessage(params):defaultContactMessage();
+    document.querySelectorAll('[data-chat-link="whatsapp"]').forEach(function(link){
+      link.href='https://wa.me/'+WHATSAPP_NUMBER+'?text='+encodeURIComponent(message);
+      link.target='_blank';
+      link.rel='noopener';
+    });
+    if(!target||!fromCheckup) return;
     target.hidden=false;
     target.innerHTML=
       '<div class="ck-findings" style="margin:18px 0">'+
@@ -453,7 +462,38 @@
         '<div class="ck-finding"><span class="ck-finding-label">Rekomendasi paket</span><span>'+escapeHtml(clean('tier'))+' · '+escapeHtml(clean('package'))+'</span></div>'+
         '<div class="ck-finding"><span class="ck-finding-label">Kebutuhan</span><span>'+escapeHtml(clean('need'))+' · '+escapeHtml(clean('format'))+'</span></div>'+
         '<div class="ck-finding"><span class="ck-finding-label">Ringkasan</span><span>'+escapeHtml(clean('summary'))+'</span></div>'+
+        '<button class="btn btn-cream" type="button" data-copy-checkup-message>Salin pesan untuk Instagram</button>'+
       '</div>';
+    var copy=target.querySelector('[data-copy-checkup-message]');
+    if(copy){
+      copy.addEventListener('click',function(){
+        if(navigator.clipboard&&navigator.clipboard.writeText){
+          navigator.clipboard.writeText(message).then(function(){copy.textContent='Pesan tersalin';});
+        }else{
+          copy.textContent='Salin manual dari ringkasan';
+        }
+      });
+    }
+  }
+
+  function defaultContactMessage(){
+    return 'Halo Feel & Heal, aku ingin bertanya tentang layanan pendampingan emosional.';
+  }
+
+  function checkupContactMessage(params){
+    function get(key){return params.get(key)||'-';}
+    return [
+      'Halo Feel & Heal, aku sudah mengisi Mini Emotional Check-Up.',
+      '',
+      'Hasil layanan: '+get('result'),
+      'Rekomendasi paket: '+get('tier')+' - '+get('package'),
+      'Kebutuhan: '+get('need'),
+      'Format nyaman: '+get('format'),
+      '',
+      'Ringkasan: '+get('summary'),
+      '',
+      'Aku ingin lanjut konsultasi dengan admin.'
+    ].join('\n');
   }
 
   function escapeHtml(s){
