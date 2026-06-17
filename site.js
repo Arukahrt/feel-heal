@@ -73,55 +73,64 @@
      opts:[
        {t:"Hampir setiap hari",e:"●",tag:"high"},
        {t:"Beberapa kali seminggu",e:"◐",tag:"mid"},
-       {t:"Sesekali saja",e:"○",tag:"low"}
+       {t:"Sesekali saja",e:"○",tag:"low"},
+       {t:"Belum sering, tapi mulai terasa",e:"◇",tag:"watch"}
      ]},
     {q:"Bagaimana kualitas tidur & istirahatmu belakangan?",
      opts:[
        {t:"Cukup & nyenyak",e:"🌙",tag:"sleep_ok"},
        {t:"Sering terganggu / gelisah",e:"😴",tag:"sleep_bad"},
-       {t:"Susah tidur / begadang terus",e:"🌑",tag:"insomnia"}
+       {t:"Susah tidur / begadang terus",e:"🌑",tag:"insomnia"},
+       {t:"Tidur lama tapi tetap lelah",e:"☁",tag:"oversleep"}
      ]},
     {q:"Bagaimana energimu menjalani aktivitas harian?",
      opts:[
        {t:"Masih cukup bertenaga",e:"🔋",tag:"energy_ok"},
        {t:"Sering merasa kewalahan",e:"🪫",tag:"energy_low"},
-       {t:"Hampir tidak ada motivasi",e:"⬇️",tag:"energy_empty"}
+       {t:"Hampir tidak ada motivasi",e:"⬇️",tag:"energy_empty"},
+       {t:"Naik turun dan sulit stabil",e:"↕",tag:"energy_unstable"}
      ]},
     {q:"Bagaimana cara kamu memandang dirimu akhir-akhir ini?",
      opts:[
        {t:"Cukup menerima diri",e:"🌼",tag:"self_ok"},
        {t:"Sering ragu pada diri",e:"🌀",tag:"self_doubt"},
-       {t:"Cenderung menyalahkan diri",e:"🥀",tag:"self_blame"}
+       {t:"Cenderung menyalahkan diri",e:"🥀",tag:"self_blame"},
+       {t:"Sering membandingkan diri",e:"≠",tag:"self_compare"}
      ]},
     {q:"Saat ada masalah, kamu biasanya...",
      opts:[
        {t:"Cerita ke orang terdekat",e:"🗣️",tag:"share"},
        {t:"Memendam sendiri",e:"🤐",tag:"keep"},
-       {t:"Mengalihkan ke hal lain",e:"🎧",tag:"distract"}
+       {t:"Mengalihkan ke hal lain",e:"🎧",tag:"distract"},
+       {t:"Menulis atau merenung sendiri",e:"✎",tag:"reflect"}
      ]},
     {q:"Sudah pernah cerita ke seseorang soal ini?",
      opts:[
        {t:"Belum, ini pertama kali",e:"🌷",tag:"first"},
        {t:"Pernah, tapi belum lega",e:"🍃",tag:"some"},
-       {t:"Sering, ingin lebih terarah",e:"🧭",tag:"often"}
+       {t:"Sering, ingin lebih terarah",e:"🧭",tag:"often"},
+       {t:"Belum menemukan orang yang tepat",e:"?",tag:"no_safe_person"}
      ]},
     {q:"Apa yang paling kamu butuhkan sekarang?",
      opts:[
        {t:"Didengar tanpa dihakimi",e:"🫂",tag:"listen"},
        {t:"Memahami akar masalahku",e:"🔍",tag:"insight"},
-       {t:"Langkah konkret untuk pulih",e:"🌱",tag:"action"}
+       {t:"Langkah konkret untuk pulih",e:"🌱",tag:"action"},
+       {t:"Dibantu menata prioritas",e:"□",tag:"prioritize"}
      ]},
     {q:"Apa yang paling kamu harapkan setelah sesi ini?",
      opts:[
        {t:"Merasa lebih tenang",e:"🍵",tag:"hope_calm"},
        {t:"Punya arah yang jelas",e:"🧭",tag:"hope_clarity"},
-       {t:"Lebih kuat menghadapi hari",e:"🌿",tag:"hope_strength"}
+       {t:"Lebih kuat menghadapi hari",e:"🌿",tag:"hope_strength"},
+       {t:"Berani cerita dan mulai lagi",e:"✦",tag:"hope_start"}
      ]},
     {q:"Kamu lebih nyaman dengan sesi yang...",
      opts:[
        {t:"Online via chat / call",e:"💬",tag:"online"},
        {t:"Video call (Google Meet)",e:"🎥",tag:"video"},
-       {t:"Hybrid / tatap muka terbatas",e:"🤝",tag:"hybrid"}
+       {t:"Hybrid / tatap muka terbatas",e:"🤝",tag:"hybrid"},
+       {t:"Chat dulu, lanjut call bila siap",e:"→",tag:"chat_then_call"}
      ]}
   ];
 
@@ -214,7 +223,7 @@
     function transcript(){
       return QUESTIONS.map(function(Q,i){
         var o=Q.opts[state.answers[i]];
-        return (i+1)+'. '+Q.q+' -> '+(o?o.t:'-');
+        return (i+1)+'. '+Q.q+' -> '+(o?o.t+' [tag: '+o.tag+']':'-');
       }).join('\n');
     }
     function bindRestart(){
@@ -248,8 +257,10 @@
       }
       if(tags.indexOf('insomnia')>=0||tags.indexOf('sleep_bad')>=0){
         impact+=" Pola istirahatmu juga ikut terganggu.";
+      }else if(tags.indexOf('oversleep')>=0){
+        impact+=" Kamu sudah tidur cukup lama, tapi tubuhmu masih terasa belum pulih.";
       }
-      if(tags.indexOf('energy_empty')>=0||tags.indexOf('energy_low')>=0){
+      if(tags.indexOf('energy_empty')>=0||tags.indexOf('energy_low')>=0||tags.indexOf('energy_unstable')>=0){
         impact+=" Energi harianmu sedang banyak terkuras.";
       }
       return [
@@ -271,24 +282,24 @@
       var main=tags[0]||'default';
       var score=0;
       var weights={
-        high:2,mid:1,insomnia:2,sleep_bad:1,energy_empty:2,energy_low:1,
-        self_blame:2,self_doubt:1,keep:1,first:1,action:1,hope_strength:1
+        high:2,mid:1,watch:1,insomnia:2,sleep_bad:1,oversleep:1,energy_empty:2,energy_low:1,energy_unstable:1,
+        self_blame:2,self_doubt:1,self_compare:1,keep:1,first:1,no_safe_person:1,action:1,prioritize:1,hope_strength:1,hope_start:1
       };
       tags.forEach(function(t){score+=weights[t]||0;});
       if(main==='burnout'||main==='relationship') score+=1;
       var key=score>=4?'premium':'standard';
       var pkg=PACKAGES[key];
       var reasons=[];
-      if(tags.indexOf('high')>=0||tags.indexOf('insomnia')>=0||tags.indexOf('energy_empty')>=0){
+      if(tags.indexOf('high')>=0||tags.indexOf('insomnia')>=0||tags.indexOf('energy_empty')>=0||tags.indexOf('oversleep')>=0){
         reasons.push("Intensitas jawabanmu menunjukkan kamu butuh pendampingan yang lebih terjaga.");
       }
-      if(tags.indexOf('insight')>=0){
+      if(tags.indexOf('insight')>=0||tags.indexOf('prioritize')>=0){
         reasons.push("Kamu ingin memahami akar masalah, jadi sesi refleksi terarah akan lebih membantu.");
       }
-      if(tags.indexOf('action')>=0||tags.indexOf('hope_strength')>=0){
+      if(tags.indexOf('action')>=0||tags.indexOf('hope_strength')>=0||tags.indexOf('hope_start')>=0){
         reasons.push("Kamu mencari langkah konkret, sehingga rekomendasinya perlu berlanjut setelah sesi.");
       }
-      if(tags.indexOf('keep')>=0||tags.indexOf('first')>=0){
+      if(tags.indexOf('keep')>=0||tags.indexOf('first')>=0||tags.indexOf('no_safe_person')>=0){
         reasons.push("Karena kamu cenderung menyimpan sendiri, follow-up bisa membantu prosesnya tetap aman.");
       }
       if(!reasons.length){
@@ -357,13 +368,18 @@
       mid:"Beberapa hari terasa lebih berat dari yang lain, dan itu manusiawi.",
       insomnia:"Tidurmu ikut terganggu — tubuh sedang memberi sinyal untuk diperhatikan.",
       sleep_bad:"Istirahatmu belum benar-benar pulih, padahal kamu membutuhkannya.",
+      oversleep:"Meski tidur cukup lama, tubuhmu masih terasa belum benar-benar pulih.",
       energy_empty:"Energimu terasa nyaris habis; pelan-pelan dulu tidak apa-apa.",
       energy_low:"Kamu sering merasa kewalahan menjalani hari.",
+      energy_unstable:"Energimu naik turun, jadi ritme harianmu mungkin terasa sulit ditebak.",
       self_blame:"Kamu cenderung keras pada diri sendiri — kamu pantas diperlakukan lebih lembut.",
       self_doubt:"Ada keraguan pada diri yang sedang kamu rasakan belakangan ini.",
+      self_compare:"Kebiasaan membandingkan diri bisa membuat beban terasa lebih berat.",
       keep:"Kamu terbiasa memendam sendiri; di sini kamu boleh bersuara tanpa takut.",
       distract:"Kamu cenderung mengalihkan perasaan — ruang ini aman untuk benar-benar memprosesnya.",
-      first:"Ini pertama kalinya kamu menceritakan hal ini, dan itu langkah yang berani."
+      reflect:"Kamu mencoba memahami diri lewat refleksi, dan itu bisa jadi pintu awal yang baik.",
+      first:"Ini pertama kalinya kamu menceritakan hal ini, dan itu langkah yang berani.",
+      no_safe_person:"Belum menemukan orang yang tepat untuk bercerita bisa membuat semuanya terasa lebih berat."
     };
     function fallback(){
       var tags=state.answers.map(function(a,i){return QUESTIONS[i].opts[a].tag;});
@@ -383,11 +399,12 @@
         'Kamu adalah pendamping emosional yang hangat, empatik, dan tidak menghakimi untuk layanan "Feel & Heal" '+
         '(emotional check-up, guided healing session, follow-up support, roleplay session) yang menyasar '+
         'mahasiswa dan pekerja muda di Indonesia.\n\n'+
-        'Berikut jawaban emotional check-up seorang klien (10 pertanyaan):\n'+transcript()+'\n\n'+
+        'Berikut jawaban emotional check-up seorang klien (10 pertanyaan). Setiap baris berisi jawaban eksplisit dan tag analisis internal:\n'+transcript()+'\n\n'+
         'Analisis SEMUA 10 jawaban secara menyeluruh. Perhatikan pola dari: kondisi emosi utama, '+
         'intensitas gangguan, kualitas tidur & energi, cara pandang diri, pola koping, riwayat berbagi, '+
         'kebutuhan saat ini, harapan ke depan, dan preferensi sesi. '+
-        'Sintesis semua ini menjadi refleksi yang terasa personal dan relevan dengan kondisi spesifik klien.\n\n'+
+        'Sintesis semua ini menjadi refleksi yang terasa personal dan relevan dengan kondisi spesifik klien. '+
+        'Jangan mengosongkan atau mengabaikan jawaban apa pun; findings wajib merujuk pada jawaban yang benar-benar dipilih.\n\n'+
         'Tulis dalam Bahasa Indonesia, gunakan kata "kamu". JANGAN memberi diagnosis medis atau klaim klinis. '+
         'Balas HANYA dengan JSON valid (tanpa teks lain, tanpa markdown) dengan struktur persis:\n'+
         '{"title":"tema emosi utama 2-4 kata berdasarkan pola keseluruhan jawaban",'+
