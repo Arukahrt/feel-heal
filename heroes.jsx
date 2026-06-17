@@ -112,7 +112,6 @@ function Hero3() {
           <div className="marq">
             <span className="sticker">overthinking</span>
             <span className="sticker">burnout</span>
-            <span className="sticker">quarter life crisis</span>
             <span className="sticker">insecure</span>
           </div>
         </div>
