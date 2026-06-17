@@ -132,7 +132,7 @@
     burnout:{title:"Burnout & Kelelahan Emosional",
       desc:"Energimu terkuras. Ini sinyal untuk berhenti sebentar, dipahami, dan dipulihkan pelan-pelan.",
       recos:["Emotional Check-Up untuk mengenali batasmu","Guided Healing untuk coping strategy & istirahat sehat","Follow-Up untuk menjaga keseimbangan"]},
-    lost:{title:"Quarter Life Crisis",
+    lost:{title:"Galau & Kehilangan Arah",
       desc:"Wajar merasa bingung arah. Kita bisa bantu kamu menemukan kembali pijakan dan kebutuhan emosionalmu.",
       recos:["Emotional Check-Up untuk memahami kondisimu","Guided Reflection untuk menata prioritas","Follow-Up untuk menemani langkahmu"]},
     relationship:{title:"Tekanan dalam Hubungan",
@@ -141,6 +141,27 @@
     default:{title:"Ruang untuk Memahami Diri",
       desc:"Terima kasih sudah jujur pada dirimu. Feel & Heal siap menemani langkah pertamamu.",
       recos:["Mulai dari Emotional Check-Up bersama admin","Lanjut ke Guided Healing Session","Dapatkan Follow-Up Support"]}
+  };
+
+  var PACKAGES={
+    standard:{
+      tier:"Standard",
+      title:"Guided Session",
+      price:"Rp 10.000 – Rp 15.000",
+      icon:"🌿",
+      label:"Mulai terarah",
+      desc:"Cocok untuk memahami perasaan, menggali akar masalah, dan menyusun coping strategy sederhana.",
+      items:["Sesi refleksi diri terarah","Eksplorasi perasaan lebih dalam","Insight & coping strategy personal","Rekomendasi langkah lanjutan"]
+    },
+    premium:{
+      tier:"Premium",
+      title:"Healing + Follow-Up",
+      price:"Rp 15.000 – Rp 20.000",
+      icon:"🌳",
+      label:"Pendampingan lanjutan",
+      desc:"Cocok saat tekanan terasa intens dan kamu butuh ruang refleksi plus pendampingan setelah sesi.",
+      items:["Semua fitur Standard","Sesi refleksi mendalam","Follow-up 1–2 hari setelah sesi","Pendampingan berkelanjutan via WA/TG"]
+    }
   };
 
   function initCheckup(){
@@ -152,6 +173,7 @@
     var USE_AI=true;
 
     function render(){
+      root.classList.remove('has-package-result');
       var total=QUESTIONS.length;
       if(state.i>=total){return renderResult();}
       var Q=QUESTIONS[state.i];
@@ -204,8 +226,63 @@
       var rb=root.querySelector('[data-act="restart"]');
       if(rb) rb.addEventListener('click',function(){state={i:0,answers:[]};render();});
     }
+    function answerTags(){
+      return state.answers.map(function(a,i){
+        var q=QUESTIONS[i], o=q&&q.opts[a];
+        return o?o.tag:null;
+      }).filter(Boolean);
+    }
+    function packageRecommendation(){
+      var tags=answerTags();
+      var main=tags[0]||'default';
+      var score=0;
+      var weights={
+        high:2,mid:1,insomnia:2,sleep_bad:1,energy_empty:2,energy_low:1,
+        self_blame:2,self_doubt:1,keep:1,first:1,action:1,hope_strength:1
+      };
+      tags.forEach(function(t){score+=weights[t]||0;});
+      if(main==='burnout'||main==='relationship') score+=1;
+      var key=score>=4?'premium':'standard';
+      var pkg=PACKAGES[key];
+      var reasons=[];
+      if(tags.indexOf('high')>=0||tags.indexOf('insomnia')>=0||tags.indexOf('energy_empty')>=0){
+        reasons.push("Intensitas jawabanmu menunjukkan kamu butuh pendampingan yang lebih terjaga.");
+      }
+      if(tags.indexOf('insight')>=0){
+        reasons.push("Kamu ingin memahami akar masalah, jadi sesi refleksi terarah akan lebih membantu.");
+      }
+      if(tags.indexOf('action')>=0||tags.indexOf('hope_strength')>=0){
+        reasons.push("Kamu mencari langkah konkret, sehingga rekomendasinya perlu berlanjut setelah sesi.");
+      }
+      if(tags.indexOf('keep')>=0||tags.indexOf('first')>=0){
+        reasons.push("Karena kamu cenderung menyimpan sendiri, follow-up bisa membantu prosesnya tetap aman.");
+      }
+      if(!reasons.length){
+        reasons.push("Jawabanmu cocok untuk mulai dari sesi refleksi yang ringan, hangat, dan terarah.");
+      }
+      return {
+        tier:pkg.tier,title:pkg.title,price:pkg.price,icon:pkg.icon,label:pkg.label,desc:pkg.desc,
+        items:pkg.items,reasons:reasons.slice(0,2)
+      };
+    }
+    function renderPackageCard(pkg){
+      var reasons=pkg.reasons.map(function(t){return '<li>'+esc(t)+'</li>';}).join('');
+      var items=pkg.items.map(function(t){return '<li>'+esc(t)+'</li>';}).join('');
+      return '<aside class="ck-package card price'+(pkg.tier==='Premium'?'':' feat')+'">'+
+        '<span class="badge">'+esc(pkg.label)+'</span>'+
+        '<div class="price-icon" aria-hidden="true">'+esc(pkg.icon)+'</div>'+
+        '<span class="tier">'+esc(pkg.tier)+'</span>'+
+        '<h3>'+esc(pkg.title)+'</h3>'+
+        '<span class="pamt">'+esc(pkg.price)+'</span>'+
+        '<p>'+esc(pkg.desc)+'</p>'+
+        '<ul class="ck-package-reasons">'+reasons+'</ul>'+
+        '<ul>'+items+'</ul>'+
+        '<a class="btn '+(pkg.tier==='Premium'?'btn-sage':'btn-cream')+'" href="kontak.html">Hubungi Admin</a>'+
+      '</aside>';
+    }
 
     function renderLoading(){
+      root.classList.remove('has-package-result');
       root.innerHTML=
         '<div class="ck-loading">'+
           '<div class="ai-badge"><span class="spark">✦</span> Menyusun refleksimu</div>'+
@@ -221,7 +298,10 @@
       var steps=(data.steps||[]).map(function(s,i){
         return '<div class="reco"><span class="ic">'+(i+1)+'</span><span>'+esc(s)+'</span></div>';
       }).join('');
+      var pkg=packageRecommendation();
+      root.classList.add('has-package-result');
       root.innerHTML=
+        '<div class="ck-result-layout">'+
         '<div class="ck-result">'+
         '<div class="badge"><span>✓</span> Check-up selesai</div>'+
         '<h3>'+esc(data.title)+'</h3>'+
@@ -233,9 +313,10 @@
           'Refleksi awal, bukan diagnosis. '+
           'Lanjutkan bersama pendamping kami.</p>'+
         '<div class="acts" style="margin-top:18px">'+
-          '<a class="btn btn-primary" href="kontak.html">Hubungi Admin</a>'+
           '<button class="btn btn-cream" data-act="restart">Ulangi check-up</button>'+
-        '</div></div>';
+        '</div></div>'+
+        renderPackageCard(pkg)+
+        '</div>';
       bindRestart();
     }
 
